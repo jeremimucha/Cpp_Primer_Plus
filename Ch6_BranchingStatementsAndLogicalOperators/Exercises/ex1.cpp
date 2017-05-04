@@ -27,6 +27,6 @@ int main()
 
 static inline void swap_case(char& ch)
 {
-    isupper(ch) ? tolower(ch)
-                : toupper(ch);
+    ch = isupper(ch) ? tolower(ch)
+                     : toupper(ch);
 }
