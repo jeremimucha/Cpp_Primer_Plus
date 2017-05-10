@@ -4,6 +4,8 @@
         "xiosbase": "cpp",
         "algorithm": "cpp",
         "vector": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "xmemory0": "cpp",
+        "array": "cpp"
     }
 }
