@@ -1,16 +1,17 @@
 CFLAGS = -O2 -Wall -Wextra -std=c++0x
 CXX = g++
 
-BINS = external.exe
-OBJS = support.o
+BINS = usenmsp.exe
+OBJS = namesp.o
 
 all: $(BINS)
 
-support.o: support.cpp
+namesp.o: namesp.cpp namesp.h
 	$(CXX) -c -o $@ $< $(CFLAGS)
 
-external.exe: external.cpp support.o
+usenmsp.exe: usenmsp.cpp namesp.o
 	$(CXX) -o $@ $^ $(CFLAGS)
+
 
 clean:
 		rm -f $(BINS) $(OBJS)
