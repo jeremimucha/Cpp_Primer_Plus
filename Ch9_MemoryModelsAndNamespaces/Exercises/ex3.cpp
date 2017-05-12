@@ -46,6 +46,7 @@ int main()
         }
     }
 
+    // Or use indexing instead of pointers
     // for(int i=0; i<2; ++i){
     //     for(int j=0; j<N; ++j){
     //         chaff_set(chaffs[i][j], names[j], j+i);
