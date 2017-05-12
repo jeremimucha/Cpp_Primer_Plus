@@ -6,6 +6,8 @@
         "vector": "cpp",
         "xstring": "cpp",
         "xmemory0": "cpp",
-        "array": "cpp"
+        "array": "cpp",
+        "system_error": "cpp",
+        "xlocale": "cpp"
     }
 }
