@@ -38,7 +38,7 @@ public:
     void buy(long num, double price);
     void sell(long num, double price);
     void update(double price);
-    void show();
+    void show() const;
     const Stock& topval(const Stock& s) const;
 };
 
