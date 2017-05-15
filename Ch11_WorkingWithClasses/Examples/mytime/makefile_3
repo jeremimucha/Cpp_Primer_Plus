@@ -1,0 +1,18 @@
+CFLAGS = -O2 -Wall -Wextra -std=c++0x
+CXX = g++
+
+BINS = usetime3.exe
+OBJS = mytime3.o
+
+all: $(BINS)
+
+mytime3.o: mytime3.cpp mytime3.h
+	$(CXX) -c -o $@ $< $(CFLAGS)
+
+usetime3.exe: usetime3.cpp $(OBJS)
+	$(CXX) -o $@ $^ $(CFLAGS)
+
+clean:
+	rm -f $(BINS) $(OBJS)
+
+.PHONY: all
