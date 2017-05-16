@@ -42,6 +42,8 @@ namespace VECTOR
     // friends
         friend Vector operator*(double n, const Vector& a);
         friend std::ostream& operator<<(std::ostream& os, const Vector& v);
+    // chapter review #5
+        operator double() const { return mag; }
     };
 } // namespace VECTOR
 
