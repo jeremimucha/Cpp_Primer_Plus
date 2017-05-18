@@ -1,0 +1,18 @@
+CFLAGS = -O2 -Wall -Wextra -std=c++0x -DSTRINGBAD_FIXED_
+CXX = g++
+
+BINS = vegnews_fixed.exe
+OBJS = stringbad_fixed.o
+
+all: $(BINS)
+
+stringbad_fixed.o: stringbad_fixed.cpp stringbad_fixed.h
+	$(CXX) -c -o $@ $< $(CFLAGS)
+
+vegnews_fixed.exe: vegnews.cpp $(OBJS)
+	$(CXX) -o $@ $^ $(CFLAGS)
+
+clean:
+	rm -f $(BINS) $(OBJS)
+
+.PHONY: all

@@ -1,7 +1,12 @@
 // vegnews.cpp -- using new and delete with classes
 // compile with strngbad.cpp
 #include <iostream>
+#ifndef STRINGBAD_FIXED_
 #include "stringbad.h"
+#endif
+#ifdef STRINGBAD_FIXED_
+#include "stringbad_fixed.h"
+#endif
 using std::cout;
 
 
