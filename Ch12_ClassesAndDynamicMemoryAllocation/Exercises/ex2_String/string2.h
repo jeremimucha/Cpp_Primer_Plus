@@ -22,8 +22,8 @@ public:
     String(const String&);  // copy constructor
     ~String();              // destructor
     int length() const { return len; }
-    void stringlow();
-    void stringup();
+    String& stringlow();
+    String& stringup();
     int countchar(char c);
 // overloaded operator methods
     String& operator=(const String& );

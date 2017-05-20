@@ -22,6 +22,7 @@ String::String(const char* s)
     str = new char[len + 1];
     std::strcpy(str, s);
     ++num_strings;
+    cout << "-> String(const char*) constructor. N = " << num_strings << '\n';
 }
 
 String::String(const String& st)
@@ -30,12 +31,14 @@ String::String(const String& st)
     len = st.len;
     str = new char[len + 1];
     std::strcpy(str, st.str);
+    cout << "-> String(const String&) copy constructor. N = " << num_strings << '\n';
 }
 
 String::~String()
 {
     --num_strings;
     delete[] str;
+    cout << "-> ~String() destructor. N = " << num_strings << '\n';
 }
 
 // overloaded operator methods;
@@ -47,6 +50,7 @@ String& String::operator=(const String& st)
     len = st.len;
     str = new char[len + 1];
     std::strcpy(str, st.str);
+    cout << "-> operator=(const String& st) assignment. N = " << num_strings << '\n';
     return *this;
 }
 
@@ -57,6 +61,7 @@ String& String::operator=(const char* s)
     len = std::strlen(s);
     str = new char[len + 1];
     std::strcpy(str, s);
+    cout << "-> operaotr(const char*) assignment. N = " << num_strings << '\n';
     return *this;
 }
 
@@ -72,12 +77,12 @@ const char& String::operator[](int i) const
     return str[i];
 }
 
-const String operator+(const String& s) const
+const String String::operator+(const String& s) const
 {
     // char* temp = new char[len + s.len -1];
-    char* temp[len + s.len +1];
+    char temp[len + s.len +1];
     std::strcpy(temp, str);
-    str::strcat(temp, s.str);
+    std::strcat(temp, s.str);
     return String(temp);
 }
 
@@ -120,26 +125,28 @@ const String operator+(const char* left, const String& right)
 {
     int llen = std::strlen(left);
     char temp[llen + right.len +1];
-    std::strcpy(temp, llen);
+    std::strcpy(temp, left);
     std::strcat(temp, right.str);
     return String(temp);
 }
 
 
-void String::stringlow()
+String& String::stringlow()
 {
     for(char* c = str; c != str+len; ++c){
         if( std::isalpha(*c) )
             *c = std::tolower(*c);
     }
+    return *this;
 }
 
-void String::stringup()
+String& String::stringup()
 {
     for(char* c = str; c != str+len; ++c){
         if( std::isalpha(*c) )
             *c = std::toupper(*c);
     }
+    return *this;
 }
 
 int String::countchar(char c)
