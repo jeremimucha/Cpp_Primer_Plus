@@ -9,4 +9,4 @@ void TableTennisPlayer::Name() const
 }
 
 
-// all RatedPlayer methdos implemented inline
+// all RatedPlayer methdos implemented inline in the header
