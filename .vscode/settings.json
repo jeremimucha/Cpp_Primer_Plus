@@ -8,6 +8,7 @@
         "xmemory0": "cpp",
         "array": "cpp",
         "system_error": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "ostream": "cpp"
     }
 }

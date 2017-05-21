@@ -27,6 +27,7 @@ void Brass::Deposit(double amt)
 
 void Brass::Withdraw(double amt)
 {
+    cout << "-> Brass::Withdraw(double) called\n";
     // set up ##.## format
     format initialState = setFormat();
     precis prec = cout.precision(2);
@@ -48,6 +49,7 @@ void Brass::Withdraw(double amt)
 
 void Brass::ViewAcct() const
 {
+    cout << "-> Brass::ViewAcct() called\n";
     // set up ###.## format
     format initialState = setFormat();
     precis prec = cout.precision(2);
@@ -63,8 +65,11 @@ void Brass::ViewAcct() const
 // redefine how ViewAcct() works
 void BrassPlus::ViewAcct() const
 {
+    cout << "-> BrassPlus::ViewAcct() called\n";
     // set up ###.## format
     format initialState = setFormat();
+    precis prec = cout.precision(2);
+
     Brass::ViewAcct(); // display base portion
     cout << "Maximum loan: $" << maxLoan << endl;
     cout << "Owed to bank: $" << owesBank << endl;
@@ -76,6 +81,7 @@ void BrassPlus::ViewAcct() const
 // redefine how Withdraw() works
 void BrassPlus::Withdraw(double amt)
 {
+    cout << "-> BrassPlus::Withdraw(double) called\n";
     // set up ###.## format
     format initialState = setFormat();
     precis prec = cout.precision(2);
@@ -107,5 +113,5 @@ format setFormat()
 void restore(format f, precis p)
 {
     cout.setf(f, std::ios_base::floatfield);
-    cout.precis(p);
+    cout.precision(p);
 }
