@@ -57,7 +57,7 @@ public:
             color[COL_LEN-1] = '\0';
             std::cout << "--> lacksDMA(const char*, const baseDMA&)\n";
         }
-    ~lacksDMA()
+    ~lacksDMA() // not actually necessary - default would be fine
         { std::cout << "--> ~lacksDMA()\n"; }
     friend std::ostream& operator<<(std::ostream& os, const lacksDMA& rs);
 };
