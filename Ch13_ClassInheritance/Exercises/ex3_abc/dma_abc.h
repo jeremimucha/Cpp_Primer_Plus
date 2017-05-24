@@ -7,13 +7,19 @@
 
 
 // DMA abstract base class
+// ----------------------------------------------------------------------------
 class DMA_ABC
 {
 private:
     char* label;
     int rating;
+protected:
+    const char* get_label() const
+        { return label; }
+    int get_rating() const
+        { return rating; }
 public:
-    DMA_ABC(const char* l="null", int r)
+    DMA_ABC(const char* l="null", int r=0)
         : label(new char[std::strlen(l) + 1])
         , rating(r)
         {
@@ -28,18 +34,22 @@ public:
             std::cout << "--> DMA_ABC(const DMA_ABC&)\n";
         }
     virtual void View() const = 0;
+    virtual DMA_ABC* clone() const = 0;
     virtual ~DMA_ABC()
         { delete[] label; std::cout << "--> ~DMA_ABC()\n"; }
-    DMA_ABC& operaotr=(const DMA_ABC& r);
+    DMA_ABC& operator=(const DMA_ABC& r);
     friend std::ostream& operator<<(std::ostream& os, const DMA_ABC& r);
 };
+// ----------------------------------------------------------------------------
 
 
+// baseDMA
+// ----------------------------------------------------------------------------
 class baseDMA : public DMA_ABC
 {
 public:
     baseDMA(const char* l="null", int r=0)
-        : DMA_ABC(l, r);
+        : DMA_ABC(l, r)
         { std::cout << "--> baseDMA(const char*, int)\n"; }
     
     // Not actually needed - default memberwise-copy-constructor is OK here
@@ -48,15 +58,22 @@ public:
         { std::cout << "--> baseDMA(const baseDMA&)\n"; }
     
     virtual void View() const;
+    virtual baseDMA* clone() const
+        { return new baseDMA(*this); }
     virtual ~baseDMA()
         { std::cout << "--> ~baseDMA()\n"; }
+
     // not actually needed - the default memberwise-copy-assignment is OK here
     baseDMA& operator=(const baseDMA& r);
+
     friend std::ostream& operator<<(std::ostream& os, const baseDMA& r);
 };
+// ----------------------------------------------------------------------------
 
 
-class lacksDMA : DMA_ABC
+// lacksDMA
+// ----------------------------------------------------------------------------
+class lacksDMA : public DMA_ABC
 {
 private:
     enum {COL_LEN = 40 };
@@ -69,19 +86,28 @@ public:
             color[COL_LEN-1] = '\0';
             std::cout << "--> lacksDMA(const char*, const char*, int)\n";
         }
+
     // Not actually needed
     lacksDMA(const lacksDMA& r)
         : DMA_ABC(r)
         { std::cout << "--> lacksDMA(const lacksDMA&)\n"; }
+
     virtual void View() const;
+    virtual lacksDMA* clone() const
+        { return new lacksDMA(*this); }
     virtual ~lacksDMA()
         { std::cout << "--> ~lacksDMA()\n"; }
+
     // Not actually needed
     lacksDMA& operator=(const lacksDMA& r);
-    firend std::ostream& operator<<(std::ostream& os, const lacksDMA& r);
+
+    friend std::ostream& operator<<(std::ostream& os, const lacksDMA& r);
 };
+// ----------------------------------------------------------------------------
 
 
+// hasDMA
+// ----------------------------------------------------------------------------
 class hasDMA : public DMA_ABC
 {
 private:
@@ -94,6 +120,7 @@ public:
             std::strcpy(style, s);
             std::cout << "--> hasDMA(const char*, const char*, int)\n";
         }
+
     //  copy constructor necessary
     hasDMA(const hasDMA& r)
         : DMA_ABC(r)    // invoke base class copy constructor
@@ -102,12 +129,19 @@ public:
             std::strcpy(style, r.style);
             std::cout << "--> hasDMA(const hasDMA&)\n";
         }
+        
     virtual void View() const;
+    virtual hasDMA* clone() const
+        { return new hasDMA(*this); }
     virtual ~hasDMA()
         { delete[] style; std::cout << "--> ~hasDMA()\n"; }
+
+    // copy assignment necessary
     hasDMA& operator=(const hasDMA& r);
+
     friend std::ostream& operator<<(std::ostream& os, const hasDMA& r);
 };
+// ----------------------------------------------------------------------------
 
 
 #endif /*DMA_ABC_H_*/
