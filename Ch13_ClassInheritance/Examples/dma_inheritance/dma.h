@@ -34,7 +34,7 @@ public:
 
 
 // derived class without DMA
-// no d estructor needed
+// no destructor needed
 // uses implicit copy constructor
 // uses implicit assignment operator
 class lacksDMA : public baseDMA
