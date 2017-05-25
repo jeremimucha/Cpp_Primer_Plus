@@ -44,6 +44,8 @@ public:
     int BottleCount() const
         { return bottles; }
     virtual void Show() const;
+    virtual Port* clone() const
+        { return new Port(*this); }
 
 // friends
     friend std::ostream& operator<<(std::ostream& os, const Port& p);
@@ -57,13 +59,33 @@ private:
     int year;           // vintage year
 
 public:
-    VintagePort();
-    VintagePort(const char* br, int b, const char* nn, int y);
-    VintagePort(const VintagePort& vp);
+    VintagePort()
+        : Port()
+        {
+            std::cout << "--> VintagePort()\n";
+        }
+    VintagePort(const char* br, int b, const char* nn, int y)
+        : Port(br, "vintage", b)
+        , nickname(new char[std::strlen(nn) + 1])
+        , year(y)
+        {
+            std::strcpy(nickname, nn);
+            std::cout << "--> VintagePort(const char*, int, const char*, int)\n";
+        }
+    VintagePort(const VintagePort& vp)
+        : Port(vp)
+        , nickname(new char[std::strlen(vp.nickname) + 1])
+        , year(vp.year)
+        {
+            std::strcpy(nickname, vp.nickname);
+            std::cout << "--> VintagePort(const VintagePort&)\n";
+        }
     ~VintagePort()
         { delete[] nickname; std::cout << "--> ~VintagePort()\n"; }
     VintagePort& operator=(const VintagePort& vp);
     virtual void Show() const;
+    virtual VintagePort* clone() const
+        { return new VintagePort(*this); }
 
 // friends
     friend std::ostream& operator<<(std::ostream& os, const VintagePort& vp);

@@ -10,7 +10,7 @@ Port& Port::operator=(const Port& p)
     delete[] brand;
     brand = new char[std::strlen(p.brand) + 1];
     std::strcpy(brand, p.brand);
-    // trust that the assignment obj was properly initialized,
+    // trust that the assigned obj was properly initialized,
     // thus use strcpy rather than strncpy
     std::strcpy(style, p.style);
     bottles = p.bottles;
@@ -46,3 +46,32 @@ std::ostream& operator<<(std::ostream& os, const Port& p)
 {
     return os << p.brand << ", " << p.style << ", " << p.bottles;
 }
+
+
+// VintagePort
+void VintagePort::Show() const
+{
+    Port::Show();
+    std::cout << "Nickname: " << nickname << '\n'
+              << "Year: " << year
+              << std::endl;
+}
+
+VintagePort& VintagePort::operator=(const VintagePort& vp)
+{
+    if( this == &vp )
+        return *this;
+
+    // handle the base class part
+    Port::operator=(vp);    // implicit upcast to type Port
+
+    delete[] nickname;
+    nickname = new char[std::strlen(vp.nickname) + 1];
+    std::strcpy(nickname, vp.nickname);
+    year = vp.year;
+
+    std::cout << "--> VintagePort::operator=(const VintagePort&)\n";
+
+    return *this;
+}
+
