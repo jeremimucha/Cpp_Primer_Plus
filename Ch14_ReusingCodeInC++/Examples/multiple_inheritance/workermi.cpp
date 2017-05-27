@@ -90,7 +90,7 @@ void Singer::Get()
 {
     cout << "Enter number for singer's voical range:\n";
     int i;
-    for(i=0; i<Vtypes, ++i){
+    for(i=0; i<Vtypes; ++i){
         cout << i << ": " << pv[i] << "   ";
         if( i % 4 == 3 )
             cout << endl;

@@ -21,7 +21,7 @@ public:
         { std::cout << "--> Worker()\n"; }
     Worker(const std::string& s, long n)
         : fullname(s)
-        , id(n))
+        , id(n)
         { std::cout << "--> Worker(const string&, long)\n"; }
     virtual ~Worker() = 0;      // pure virtual destructor
     virtual void Set() = 0;
@@ -54,6 +54,8 @@ public:
         : Worker(wk)
         , panache(p)
         { std::cout << "--> Waiter(const Worker&, int)\n"; }
+    ~Waiter()
+        { std::cout << "--> ~Waiter()\n"; }
     void Set();
     void Show() const;
 };
@@ -67,7 +69,7 @@ protected:
     void Data() const;
     void Get();
 private:
-    static char* pv[Vtypes];    // string equivs of voice types
+    static const char* pv[Vtypes];    // string equivs of voice types
     int voice;
 public:
     Singer()
@@ -82,13 +84,15 @@ public:
         : Worker(wk)
         , voice(v)
         { std::cout << "--> Singer(const Worker&, int)\n"; }
+    ~Singer()
+        { std::cout << "--> ~Singer()\n"; }
     void Set();
     void Show() const;
 };
 
 
 // multiple inheritance
-class SingingWaiter : public Singer, public Waiter
+class SingingWaiter : public Waiter, public Singer
 {
 protected:
     void Data() const;
@@ -112,6 +116,8 @@ public:
         , Waiter(sr, p)     // implicitly upcast to Worker type
         , Singer(sr)
         { std::cout << "--> SingingWaiter(const Singer&, int)\n"; }
+    ~SingingWaiter()
+        { std::cout << "--> ~SingingWaiter()\n"; }
     void Set();
     void Show() const;
 };
