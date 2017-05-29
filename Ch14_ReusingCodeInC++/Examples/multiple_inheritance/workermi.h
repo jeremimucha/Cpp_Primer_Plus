@@ -30,9 +30,9 @@ public:
 
 
 // virtual base class will be inherited once if two derived classes
-// are inherited in a multiple-inheritance scenario by a 'third-generation'
+// are inherited in a multiple-inheritance scenario by a 'second-generation'
 // derived class (deriving from the derived classes).
-// This means that the 'third-generation' derived class will contain only one
+// This means that the 'second-generation' derived class will contain only one
 // base class subobject
 class Waiter : virtual public Worker
 {
