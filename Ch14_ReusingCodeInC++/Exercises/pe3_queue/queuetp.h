@@ -11,13 +11,13 @@ template<typename T>
 class QueueTP
 {
 protected:
-    template<typename T>
+    template<typename V>
     struct Node{
-        T val;
+        V val;
         struct Node* next;
         Node()
             : val(), next(nullptr) { }
-        Node(const T& v, Node* n=nullptr)
+        Node(const V& v, Node* n=nullptr)
             : val(v), next(n) { }
     };
     void clear();
@@ -25,16 +25,19 @@ private:
     Node<T>* head;
     Node<T>* tail;
 public:
+    using forward_iterator = Node<T>*;
+    using const_forward_iterator = const Node<T>*;
     QueueTP()
         : head(nullptr), tail(nullptr)
         { std::cout << "--> QueueTP()\n"; }
     QueueTP(const T& t)
-        : being(new Node(t)), tail(new Node(t))
+        : head(new Node<T>(t)), tail(new Node<T>(t))
+        { }
     QueueTP(initializer_list<T> lst)
         : head(nullptr), tail(nullptr)
         {
             for(int i=0; i<lst.size(); ++i){
-                Node* node = new Node(lst[i]);
+                Node<T>* node = new Node<T>(lst[i]);
                 if(tail == nullptr)
                     head = tail = node;
                 else{
@@ -44,41 +47,43 @@ public:
             }
         }
     QueueTP(const QueueTP& q)
-        : head(nullptr), end(nullptr)
+        : head(nullptr), tail(nullptr)
         {
-            for(Node* n=q.begin; n!=nullptr; n = n->next){
+            for(Node<T>* n=q.begin; n!=nullptr; n = n->next){
                 if(tail == nullptr)
-                    head = tail = new Node(n->val);
+                    head = tail = new Node<T>(n->val);
                 else{
-                    tail->next = new Node(n->val);
+                    tail->next = new Node<T>(n->val);
                     tail = tail->next;
                 }
             }
         }
     QueueTP& operator=(const QueueTP& q);
-    ~QueueTP();
-    Node* begin()
+    ~QueueTP()
+        { clear(); }
+    forward_iterator begin()
         { return head; }
-    const Node* begin() const
+    const_forward_iterator begin() const
         { return head; }
-    Node* end()
+    forward_iterator end()
         { return tail->next; }
-    const Node* end() const
+    const_forward_iterator end() const
         { return tail->next; }
-    Node* last()
-        { return tail; }
-    const Node* last() const
-        { return last; }
+    T& last()
+        { return tail->val; }
+    const T& last() const
+        { return tail->val; }
     bool push(const T& v);
     bool pop(T& v);
 
 };
 
-void QueueTP:clear()
+template<typename T>
+void QueueTP<T>::clear()
 {
-    Node* n = head;
+    Node<T>* n = head;
     while(n != nullptr){
-        Node* temp = n->next;
+        Node<T>* temp = n->next;
         delete n;
         n = temp;
     }
@@ -86,19 +91,20 @@ void QueueTP:clear()
 }
 
 template<typename T>
-QueueTP& QueueTP::operator=(const QueueTP& q)
+QueueTP<T>& QueueTP<T>::operator=(const QueueTP& q)
 {
     if( this == &q )
         return *this;
 
-    clear();    // destroy all the elements currently in the queue
+    // destroy all the elements currently in the queue
+    clear();    
     // iterate over the q - copy all the node values to new nodes
-    for(Node* n=q.begin; n!=nullptr; n = n->next){
+    for(Node<T>* n=q.head; n!=nullptr; n = n->next){
         if(tail == nullptr){
-            being = tail = new Node(n->val);
+            head = tail = new Node<T>(n->val);
         }
         else{
-            tail->next = new Node(n->val);
+            tail->next = new Node<T>(n->val);
             tail = tail->next;
         }
     }
@@ -106,14 +112,15 @@ QueueTP& QueueTP::operator=(const QueueTP& q)
     return *this;
 }
 
-bool QueueTP::push(const T& v)
+template<typename T>
+bool QueueTP<T>::push(const T& v)
 {
-    Node* node = new Node(v);
+    Node<T>* node = new Node<T>(v);
     if(node == nullptr)
         return false;
 
     if(tail == nullptr)
-        begin = tail = node;
+        head = tail = node;
     else{
         tail->next = node;
         tail = tail->next;
@@ -121,12 +128,19 @@ bool QueueTP::push(const T& v)
     return true;
 }
 
-bool QueueTP::pop(T& v)
+template<typename T>
+bool QueueTP<T>::pop(T& v)
 {
-    if( begin != nullptr ){
-        v = begin->val;
-        
+    if( head != nullptr ){
+        v = head->val;
+        Node<T>* temp = head;
+        head = head->next;
+        delete temp;
+        if( head == nullptr )
+            tail = nullptr;
+        return true;
     }
+    return false;
 }
 
 #endif /*QUEUETP_H_*/
