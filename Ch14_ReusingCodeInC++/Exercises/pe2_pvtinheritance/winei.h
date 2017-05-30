@@ -39,7 +39,7 @@ private:
 public:
     Wine()
         : std::string("noname")
-        , Pair<ArrayInt, ArrayInt>(ArrayInt(), ArrayInt());
+        , Pair<ArrayInt, ArrayInt>(ArrayInt(), ArrayInt())
         , nyears(0)
         { }
     Wine(const char* l, int y)
@@ -52,19 +52,19 @@ public:
         , Pair<ArrayInt, ArrayInt>(ArrayInt(y), ArrayInt(y))
         , nyears(y)
         {
-            for(int i=0; i<nyears, ++i){
-                PairArray::fst()[i] = yr[i];
-                PairArray::snd()[i] = bot[i];
+            for(int i=0; i<nyears; ++i){
+                Pair<ArrayInt, ArrayInt>::fst()[i] = yr[i];
+                Pair<ArrayInt, ArrayInt>::snd()[i] = bot[i];
             }
         }
     void GetBottles();
-    void Show();
+    void Show() const;
     std::string& Label()
         { return (std::string&)*this; }
-    const std::string& Label()
+    const std::string& Label() const
         { return (const std::string&)*this; }
     int sum() const;
-}
+};
 
 
 #endif /*WINEI_H_*/
