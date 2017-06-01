@@ -60,8 +60,8 @@ public:
 class Card
 {
 protected:
-    enum {RANKS=13};
-    enum {SUITS=4};
+    enum { RANKS=13 };
+    enum { SUITS=4 };
     enum { ace=0, jack=10, queen=11, king=12 };
     enum { clubs, dimonds, hearts, spades };
 private:

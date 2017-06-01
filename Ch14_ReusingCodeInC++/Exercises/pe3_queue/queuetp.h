@@ -11,6 +11,7 @@ template<typename T>
 class QueueTP
 {
 protected:
+// nested template Node
     template<typename V>
     struct Node{
         V val;
@@ -20,10 +21,13 @@ protected:
         Node(const V& v, Node* n=nullptr)
             : val(v), next(n) { }
     };
+
     void clear();
+
 private:
     Node<T>* head;
     Node<T>* tail;
+    
 public:
     using forward_iterator = Node<T>*;
     using const_forward_iterator = const Node<T>*;
@@ -108,7 +112,6 @@ QueueTP<T>& QueueTP<T>::operator=(const QueueTP& q)
             tail = tail->next;
         }
     }
-
     return *this;
 }
 
@@ -119,12 +122,11 @@ bool QueueTP<T>::push(const T& v)
     if(node == nullptr)
         return false;
 
-    if(tail == nullptr)
-        head = tail = node;
-    else{
+    if(head == nullptr)
+        head = node;
+    else
         tail->next = node;
-        tail = tail->next;
-    }
+    tail = node;
     return true;
 }
 
