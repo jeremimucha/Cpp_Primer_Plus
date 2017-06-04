@@ -45,6 +45,8 @@
         "xutility": "cpp",
         "valarray": "cpp",
         "list": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "map": "cpp",
+        "memory": "cpp"
     }
 }
