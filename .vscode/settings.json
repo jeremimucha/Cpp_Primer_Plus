@@ -47,6 +47,11 @@
         "list": "cpp",
         "xtree": "cpp",
         "map": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "deque": "cpp",
+        "functional": "cpp",
+        "queue": "cpp",
+        "set": "cpp",
+        "xfunctional": "cpp"
     }
 }

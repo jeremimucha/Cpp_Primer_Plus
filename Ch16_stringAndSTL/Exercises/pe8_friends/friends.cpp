@@ -1,6 +1,7 @@
 // friends.cpp -- Chapter 16 pe8 - merging two lists of strings
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 #include <iterator>
@@ -12,16 +13,22 @@ private:
     std::string fname;
     std::string lname;
 public:
-    Person(const std:string& first, const std::string& last)
+    Person()
+        : fname(), lname()
+        { }
+    Person(const std::string& first, const std::string& last)
         : fname(first), lname(last)
         { }
-    void Show() const { cout << lname << ", " << fname << '\n'; }
+    void Show() const { std::cout << lname << ", " << fname << '\n'; }
+    bool operator==(const Person& other) const;
+    bool operator<(const Person& other) const;
+// friends
     friend std::ostream& operator<<(std::ostream& os, const Person& p);
     friend std::istream& operator>>(std::istream& is, Person& p);
 };
 
-std::istream& get_person(std::istream& is, Person& p);
-
+std::vector<Person> get_friends(const char* msg);
+void show_friends(std::vector<Person> friends, const char* msg);
 
 int main()
 {
@@ -32,54 +39,86 @@ int main()
     using std::string;
 
     
-    vector<string> matfirnds;
-    vector<string> patfriends;
-    string line;
-    cout << "Enter Mat's friends. Empty line to stop.\n";
-    while(cout << ">> " && getline(cin, line) && !line.empty()){
-        std::istringstream iss(line);
-        Person p;
-        if( !(iss >> p) ){
-            cout << "Invalid person format.\n"
-                 << "Please enter friends in Firstname Lastname or Lastname, Firstname format.\n";
-        }
-        else
-            matfriends.push_back(p);
-    }
+    vector<Person> matfriends = get_friends("Enter Mat's friends.");
+    vector<Person> patfriends = get_friends("Enter Pat's friends.");
+    std::sort(matfriends.begin(), matfriends.end());
+    std::sort(patfriends.begin(), patfriends.end());
+    show_friends(matfriends, "Mat's friends:\n");
+    show_friends(patfriends, "Pat's friends:\n");
+    vector<Person> allfriends;
+    set_union(matfriends.begin(), matfriends.end()
+             ,patfriends.begin(), patfriends.end()
+             ,std::back_insert_iterator<vector<Person>>(allfriends));
+    std::sort(allfriends.begin(), allfriends.end());
+    show_friends(allfriends, "Mat's and Pat's friends:\n");
+
+    return 0;
 }
 
 
-friend std::ostream& operator<<(std::ostream& os, const Person& p)
+bool Person::operator==(const Person& other) const
+{
+    return (lname == other.lname && fname == other.fname);
+}
+
+bool Person::operator<(const Person& other) const
+{
+    if( lname == other.lname )
+        return fname < other.fname;
+    else
+        return lname < other.lname;
+}
+
+std::ostream& operator<<(std::ostream& os, const Person& p)
 {
     return os << p.fname << ' ' << p.lname;
 }
 
-friend std::istream& operator>>(std::istream& is, Person& p);
+std::istream& operator>>(std::istream& is, Person& p)
 {
     std::string temp;
     if( !(is>>temp) )
         return is;
     if( temp.back() == ',' ){
         temp.pop_back();
-        lname = temp;
-        if( !(is>>fname) ){
-            lname = "";
+        p.lname = temp;
+        if( !(is>>p.fname) ){
+            p.lname = "";
         }
     }
     else{
-        fname = temp;
-        if( !(is>>lname) ){
-            fname = "";
+        p.fname = temp;
+        if( !(is>>p.lname) ){
+            p.fname = "";
         }
     }
     return is;
 }
 
-std::istream& get_person(std::istream& is, Person& p)
+std::vector<Person> get_friends(const char* msg)
 {
-    if( is >> p )
-        return is;
-    else{
+    std::cout << msg << " Empty line to stop.\n";
+    std::string line;
+    std::vector<Person> friends;
+    while(std::cout << ">> " && std::getline(std::cin, line) && !line.empty()){
+        std::istringstream iss{line};
+        Person p;
+        if( !(iss >> p) ){
+            std::cout << "Invalid person format.\n"
+                      << "Please enter friends in Firstname Lastname or Lastname, Firstname format.\n";
+        }
+        else
+            friends.push_back(p);
+    }
+    return friends;
+}
 
+void show_friends(std::vector<Person> friends, const char* msg)
+{
+    std::cout << msg;
+    for(std::vector<Person>::const_iterator p = friends.begin();
+        p!=friends.end();
+        ){
+        std::cout << *p++ << '\n';
     }
 }
