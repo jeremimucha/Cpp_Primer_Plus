@@ -5,8 +5,8 @@
 
 
 int reduce(long ar[], int n);
-template<typename OutIter>
-void show_array(OutIter begin, OutIter end)
+template<typename InputIterator>
+void show_array(InputIterator begin, InputIterator end)
 {
     while(begin != end)
         std::cout << *begin++ << ' ';

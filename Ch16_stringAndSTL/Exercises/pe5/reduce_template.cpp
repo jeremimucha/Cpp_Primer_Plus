@@ -50,8 +50,8 @@ int reduce(T ar[], int n)
     return last - ar;
 }
 
-template<typename OutputIterator>
-void show_array(OutputIterator begin, OutputIterator end)
+template<typename InputIterator>
+void show_array(InputIterator begin, InputIterator end)
 {
     while( begin != end ){
         std::cout << *begin++ << ", ";
