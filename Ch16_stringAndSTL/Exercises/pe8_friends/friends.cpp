@@ -36,6 +36,7 @@ int main()
     using std::cout;
     using std::endl;
     using std::vector;
+    using std::set;
     using std::string;
 
     
@@ -45,11 +46,16 @@ int main()
     std::sort(patfriends.begin(), patfriends.end());
     show_friends(matfriends, "Mat's friends:\n");
     show_friends(patfriends, "Pat's friends:\n");
-    vector<Person> allfriends;
+    // vector<Person> allfriends;
+// use a set instead to avoid sorting
+    set<Person> allfriends;
+    // set_union(matfriends.begin(), matfriends.end()
+    //          ,patfriends.begin(), patfriends.end()
+    //          ,std::back_insert_iterator<vector<Person>>(allfriends));
+    // std::sort(allfriends.begin(), allfriends.end());
     set_union(matfriends.begin(), matfriends.end()
-             ,patfriends.begin(), patfriends.end()
-             ,std::back_insert_iterator<vector<Person>>(allfriends));
-    std::sort(allfriends.begin(), allfriends.end());
+             ,patreiwnds.begin(), patfriends.end()
+             ,std::insert_iterator<set<Person>>(allfriends, allfriends.begin()));
     show_friends(allfriends, "Mat's and Pat's friends:\n");
 
     return 0;
