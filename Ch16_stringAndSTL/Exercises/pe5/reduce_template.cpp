@@ -1,4 +1,4 @@
-// reduce_template.cpp -- CH16 pe5 -- reduce function template with 'old' iterface
+// reduce_template.cpp -- Ch16 pe5 -- reduce function template with 'old' iterface
 #include <iostream>
 #include <algorithm>
 #include <string>
