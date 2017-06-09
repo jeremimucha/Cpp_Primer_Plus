@@ -52,6 +52,9 @@
         "functional": "cpp",
         "queue": "cpp",
         "set": "cpp",
-        "xfunctional": "cpp"
+        "xfunctional": "cpp",
+        "iomanip": "cpp",
+        "xlocmon": "cpp",
+        "xloctime": "cpp"
     }
 }

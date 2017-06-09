@@ -5,7 +5,7 @@
 const int SLEN = 10;
 
 
-intline void eatline() { while (std::cin.get() != '\n') continue; }
+inline void eatline() { while (std::cin.get() != '\n') continue; }
 
 
 int main()
@@ -17,7 +17,12 @@ int main()
     char name[SLEN];
     char title[SLEN];
     cout << "Enter your name: ";
-    cin.get(name, SLEN);
+    while(!cin.get(name, SLEN)){
+        if(cin.fail())
+            cout << "cin failbit was set - \\n was the first character found in the stream.\n";
+        cin.clear();
+        eatline();
+    }
     if(cin.peek() != '\n')
         cout << "Sorry, we only have enough room for "
              << name << endl;

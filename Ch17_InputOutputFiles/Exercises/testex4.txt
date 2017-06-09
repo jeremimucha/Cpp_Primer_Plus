@@ -1,0 +1,46 @@
+// ex3.cpp -- Chpater 17 exercise 2 - copy one file to another, named on the cmd // ex4.cpp -- Chapter 17 exercise 4 - concatenate two files line by line
+#include <iostream> #include <iostream>
+#include <fstream> #include <fstream>
+#include <cstdlib> #include <cstdlib>      // for exit()
+ 
+ 
+inline bool file_exists(const char* fname) int main(int argc, char* argv[])
+{ {
+     using namespace std;
+    std::ifstream ifs(fname);     if(argc != 4){
+    return ifs.is_open();         cout << "Usage: " << argv[0] << "fromfile1 fromfile2 tofile\n";
+}         exit(EXIT_FAILURE);
+     }
+ 
+int main(int argc, char* argv[])     ifstream from1(argv[1]);
+{     if(!from1.is_open()){
+    using namespace std;         cout << "Can't open " << argv[1] << " for reading. Aborting.\n";
+    if( argc < 3 ){         exit(EXIT_FAILURE);
+        cout << "Usage: " << argv[0] << "from_file to_file [1-truncate existing]\n";     }
+        exit(EXIT_FAILURE);     ifstream from2(argv[2]);
+    }     if(!from2.is_open()){
+         cout << "Can't open " << argv[2] << " for reading. Aborting.\n";
+    ifstream fromfile(argv[1], ios_base::in | ios_base::binary);         exit(EXIT_FAILURE);
+    if(!fromfile.is_open()){     }
+        cout << "Could not open the " << argv[1] << " file. Aborting.\n";     ofstream tofile(argv[3]);
+        exit(EXIT_FAILURE);     if(!tofile.is_open()){
+    }         cout << "Can't open " << argv[3] << " for writing. Aborting.\n";
+    ofstream tofile;         exit(EXIT_FAILURE);
+    if( argc < 4 || (argc==4 && argv[3][0] != '1')){     }
+        if(file_exists(argv[2])){ 
+            cout << argv[2] << " file already exists. Aborting.\n";     string line;
+            exit(EXIT_FAILURE);     while( getline(from1, line) && tofile << line << " "
+        }         && getline(from2, line) && tofile << line << '\n')
+    }         ;
+    tofile.open(argv[2], ios_base::out | ios_base::binary);     while(getline(from1, line))
+    if(!tofile.is_open()){         tofile << line << '\n';
+        cout << "Could not open the " << argv[2] << " file for output. Aborting.\n";     while(getline(from2, line))
+        exit(EXIT_FAILURE);         tofile << line << '\n';
+    } 
+     from1.close();
+    tofile << fromfile.rdbuf();     from2.close();
+     tofile.close();
+    fromfile.close();     return 0;
+    tofile.close(); }
+    cout << "\nDone.\n";     return 0;
+}
