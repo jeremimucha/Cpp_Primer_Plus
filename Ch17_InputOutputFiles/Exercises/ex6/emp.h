@@ -3,6 +3,8 @@
 #define EMP_H_
 
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <string>
 
 
@@ -15,6 +17,7 @@ private:
 protected:
     enum kind{ Abstr_emp, Employee, Manager, Fink, Highfink };
     void serialize(std::ofstream& ofs) const;
+    void deserialize(std::ifstream& ifs);
 public:
     abstr_emp()
         : fname(), lname(), job() { std::cout << "--> abstr_emp()\n"; }
@@ -25,18 +28,20 @@ public:
     virtual void ShowAll() const;       // labels and shows all data
     virtual void SetAll();              // prompts user for values
     virtual void writeall(std::ofstream& ofs) const;    // writes binary data to ofs
+    virtual void getall(std::ifstream& ifs) = 0;        // reads binary data from file
 // friends
     // just displays first and last name
     friend std::ostream& operator<<(std::ostream& os, const abstr_emp& e);
     virtual ~abstr_emp() = 0;       // virtual base class
 
-    static abstr_emp* readall(std::ifstream& ifs) const;
+    static std::vector<abstr_emp*> readall(std::ifstream& ifs);
 };
 
 class employee : public abstr_emp
 {
 protected:
     void serialize(std::ofstream& ofs) const { }
+    void deserialize(std::ifstream& ifs) { }
 public:
     employee()
         : abstr_emp()
@@ -48,7 +53,9 @@ public:
     virtual void ShowAll() const;
     virtual void SetAll();
     void writeall(std::ofstream& ofs) const;
+    void getall(std::ifstream& ifs);
     ~employee() { std::cout << "--> ~employee()\n"; }
+
 };
 
 
@@ -62,6 +69,7 @@ protected:
     int& InChargeOf()           // output
         { return inchargeof; }
     void serialize(std::ofstream& ofs) const;
+    void deserialize(std::ifstream& ifs);
 public:
     manager()
         : abstr_emp()
@@ -83,6 +91,7 @@ public:
     virtual void ShowAll() const;
     virtual void SetAll();
     void writeall(std::ofstream& ofs) const;
+    void getall(std::ifstream& ifs);
     ~manager() { std::cout << "--> ~manager()\n"; }
 };
 
@@ -97,6 +106,7 @@ protected:
     std::string& ReportsTo()
         { return reportsto; }
     void serialize(std::ofstream& ofs) const;
+    void deserialize(std::ifstream& ifs);
 public:
     fink()
         : abstr_emp()
@@ -118,6 +128,7 @@ public:
     virtual void ShowAll() const;
     virtual void SetAll();
     void writeall(std::ofstream& ofs) const;
+    void getall(std::ifstream& ifs);
     ~fink() { std::cout << "--> ~fink()\n"; }
 };
 
@@ -126,6 +137,7 @@ class highfink : public manager, public fink   // management fink
 {
 protected:
     void serialize(std::ofstream& ofs) const { }
+    void deserialize(std::ifstream& ifs) { }
 public:
     highfink()
         : abstr_emp()
@@ -162,6 +174,7 @@ public:
     virtual void ShowAll() const;
     virtual void SetAll();
     void writeall(std::ofstream& ofs) const;
+    void getall(std::ifstream& ifs);
     ~highfink() { std::cout << "--> ~highfink()\n"; }
 };
 

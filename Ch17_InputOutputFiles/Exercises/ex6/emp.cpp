@@ -23,6 +23,8 @@ void abstr_emp::SetAll()
     std::cin >> fname;
     std::cout << "Enter Last Name: ";
     std::cin >> lname;
+    std::cout << "Enter Job: ";
+    std::cin >> job;
     while(std::cin.get() != '\n')
         ;
 }
@@ -31,16 +33,88 @@ void abstr_emp::serialize(std::ofstream& ofs) const
 {
     std::size_t len;
     // std::string& members[] = {fname, lname, job};
-    for( const std::string* s : { &fname, &lname, &job }){
-        len = s->size();
-        ofs.write( (char*)&len, sizeof(len) );
-        ofs.write( s->data(), len );
+    // for( const std::string* s : { &fname, &lname, &job }){
+    //     len = s->size();
+    //     ofs.write( (char*)&len, sizeof(len) );
+    //     ofs.write( s->data(), len );
+    // }
+// fname
+    len = fname.size();
+    ofs.write( (char*)&len, sizeof(len) );
+    ofs.write( fname.data(), len );
+// lname
+    len = lname.size();
+    ofs.write( (char*)&len, sizeof(len) );
+    ofs.write( lname.data(), len );
+// job
+    len = job.size();
+    ofs.write( (char*)&len, sizeof(len) );
+    ofs.write( job.data(), len );
+}
+
+void abstr_emp::deserialize(std::ifstream& ifs)
+{
+    std::size_t len;
+    // for( std::string* ps : { &fname, &lname, &job }){
+    //     ifs.read( (char*)&len, sizeof(len) );
+    //     if(ifs.fail()){
+    //         std::cerr << "<abstr_emp::deserialize>: failed to read size_t from file.\n";
+    //         exit(EXIT_FAILURE);
+    //     }
+    //     char buf[len +1];
+    //     ifs.read(buf, len);
+    //     if(ifs.fail()){
+    //         std::cerr << "<abstr_emp::deserialize>: failed to read string from file.\n";
+    //         exit(EXIT_FAILURE);
+    //     }
+    //     buf[len] = '\0';
+    //     *ps = buf;
+    // }
+// fname
+    ifs.read( (char*)&len, sizeof(len) );
+    if(ifs.fail()){
+        std::cerr << "<abstr_emp::deserialize>: failed to read len fname from file.\n";
+        exit(EXIT_FAILURE);
     }
+    char buffname[len + 1];
+    ifs.read(buffname, len);
+    if(ifs.fail()){
+
+    }
+    buffname[len] = '\0';
+    fname = buffname;
+// lname
+    ifs.read( (char*)&len, sizeof(len) );
+    if(ifs.fail()){
+        std::cerr << "<abstr_emp::deserialize>: failed to read len lname from file.\n";
+        exit(EXIT_FAILURE);
+    }
+    char buflname[len + 1];
+    ifs.read(buflname, len);
+    if(ifs.fail()){
+
+    }
+    buflname[len] = '\0';
+    lname = buflname;
+// job
+    ifs.read( (char*)&len, sizeof(len) );
+    if(ifs.fail()){
+        std::cerr << "<abstr_emp::deserialize>: failed to read len job from file.\n";
+        exit(EXIT_FAILURE);
+    }
+    char bufjob[len + 1];
+    ifs.read(bufjob, len);
+    if(ifs.fail()){
+
+    }
+    bufjob[len] = '\0';
+    job = bufjob;
 }
 
 void abstr_emp::writeall(std::ofstream& ofs) const
 {
-    ofs.write( (char*)&Abstr_emp, sizeof(Abstr_emp) );
+    decltype(Abstr_emp) classkind = Abstr_emp;
+    ofs.write( (char*)&classkind, sizeof(classkind) );
     serialize(ofs);
 }
 
@@ -49,27 +123,32 @@ std::ostream& operator<<(std::ostream& os, const abstr_emp& e)
     return os << e.fname << e.lname;
 }
 
-abstr_emp* abstr_emp::readall(std::ifstream& ifs) const
+std::vector<abstr_emp*> abstr_emp::readall(std::ifstream& ifs)
 {
-    decltype(Abstr_emp) classkind;
-    ifs.read( (char*)&classkind, sizeof(classkind) );
-    switch(classkind){
-        case Abstr_emp:
-        case Employee:
-            return employee::readall(ifs);
-            break;
-        case Manager:
-            return manager::readall(ifs);
-            break;
-        case Fink:
-            return fink::readall(ifs);
-            break;
-        case Highfink:
-            return highfink::readall(ifs);
-            break;
-        default:
-            return nullptr;
+    std::vector<abstr_emp*> emps;
+    unsigned int classkind;
+    while( ifs.read( (char*)&classkind, sizeof(classkind) ) ){
+        switch(classkind){
+            case Abstr_emp:
+            case Employee:
+                emps.push_back(new employee);
+                break;
+            case Manager:
+                emps.push_back(new manager);
+                break;
+            case Fink:
+                emps.push_back(new fink);
+                break;
+            case Highfink:
+                emps.push_back(new highfink);
+                break;
+            default:
+                std::cerr << "<abstr_emp::readall>: reached default\n";
+                break;
+        }
+        emps.back()->getall(ifs);
     }
+    return emps;
 }
 /* ------------------------------------------------------------------------- */
 
@@ -90,11 +169,17 @@ void employee::SetAll()
 
 void employee::writeall(std::ofstream& ofs) const
 {
-    ofs.write( (char*)&abstr_emp::Employee, sizeof(abstr_emp::Employee) );
+    unsigned int classkind = abstr_emp::Employee;
+    ofs.write( (char*)&classkind, sizeof(classkind) );
     abstr_emp::serialize(ofs);
     serialize(ofs);
 }
 
+void employee::getall(std::ifstream& ifs)
+{
+    abstr_emp::deserialize(ifs);
+    deserialize(ifs);
+}
 /* ------------------------------------------------------------------------- */
 
 
@@ -122,11 +207,26 @@ void manager::serialize(std::ofstream& ofs) const
     ofs.write( (char*)&inchargeof, sizeof(inchargeof) );
 }
 
+void manager::deserialize(std::ifstream& ifs)
+{
+    ifs.read( (char*)&inchargeof, sizeof(inchargeof) );
+    if(ifs.fail()){
+        std::cerr << "<manager::deserialize>: Failed to read int.\n";
+    }
+}
+
 void manager::writeall(std::ofstream& ofs) const
 {
-    ofs.write( (char*)&abstr_emp::Manager, sizeof(abstr_emp::Manager) );
+    unsigned int classkind = abstr_emp::Manager;
+    ofs.write( (char*)&classkind, sizeof(classkind) );
     abstr_emp::serialize(ofs);
     serialize(ofs);
+}
+
+void manager::getall(std::ifstream& ifs)
+{
+    abstr_emp::deserialize(ifs);
+    deserialize(ifs);
 }
 /* ------------------------------------------------------------------------- */
 
@@ -154,13 +254,47 @@ void fink::serialize(std::ofstream& ofs) const
 {
     std::size_t len = reportsto.size();
     ofs.write( (char*)&len, sizeof(len) );
+    if(ofs.fail()){
+        std::cerr << "<fink::serialize>: Failed to write size_t\n";
+        exit(EXIT_FAILURE);
+    }
+    ofs.write( reportsto.data(), len );
+    if(ofs.fail()){
+        std::cerr << "<fink::serialize>: Failed to write string\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
+void fink::deserialize(std::ifstream& ifs)
+{
+    std::size_t len;
+    ifs.read( (char*)&len, sizeof(len) );
+    if(ifs.fail()){
+        std::cerr << "<fink::deserialize>: Failed to read size_t.\n";
+        exit(EXIT_FAILURE);
+    }
+    char buf[len + 1];
+    ifs.read( buf, len );
+    if(ifs.fail()){
+        std::cerr << "<fink::deserialize>: Faield to read string.\n";
+        exit(EXIT_FAILURE);
+    }
+    buf[len] = '\0';
+    reportsto = buf;
 }
 
 void fink::writeall(std::ofstream& ofs) const
 {
-    ofs.write( (char*)&abstr_emp::Fink, sizeof(abstr_emp::Fink) );
+    unsigned int classkind = abstr_emp::Fink;
+    ofs.write( (char*)&classkind, sizeof(classkind) );
     abstr_emp::serialize(ofs);
     serialize(ofs);
+}
+
+void fink::getall(std::ifstream& ifs)
+{
+    abstr_emp::deserialize(ifs);
+    deserialize(ifs);
 }
 /* ------------------------------------------------------------------------- */
 
@@ -189,10 +323,19 @@ void highfink::SetAll()
 
 void highfink::writeall(std::ofstream& ofs) const
 {
-    ofs.write( (char*)&abstr_emp::Highfink, sizeof(abstr_emp::Highfink) );
+    unsigned int classkind = abstr_emp::Highfink;
+    ofs.write( (char*)&classkind, sizeof(classkind) );
     abstr_emp::serialize(ofs);
     manager::serialize(ofs);
     fink::serialize(ofs);
     serialize(ofs);
+}
+
+void highfink::getall(std::ifstream& ifs)
+{
+    abstr_emp::deserialize(ifs);
+    manager::deserialize(ifs);
+    fink::deserialize(ifs);
+    deserialize(ifs);
 }
 /* ------------------------------------------------------------------------- */
